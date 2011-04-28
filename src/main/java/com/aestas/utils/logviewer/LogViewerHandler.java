@@ -1,7 +1,7 @@
 package com.aestas.utils.logviewer;
 
-import com.aestas.utils.logviewer.tail.LogFileTailer;
-import com.aestas.utils.logviewer.tail.LogFileTailerListener;
+import org.apache.commons.io.input.Tailer;
+import org.apache.commons.io.input.TailerListenerAdapter;
 import org.atmosphere.cpr.AtmosphereHandler;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
@@ -18,11 +18,11 @@ import java.util.List;
 /**
  * User: lfi
  */
-public class LogViewerHandler implements AtmosphereHandler<HttpServletRequest, HttpServletResponse>, LogFileTailerListener {
+public class LogViewerHandler extends TailerListenerAdapter implements AtmosphereHandler<HttpServletRequest, HttpServletResponse> {
 
     private final static String FILE_TO_WATCH = "/var/log/";
     //private final static String FILE_TO_WATCH = "d://temp";
-    private static LogFileTailer tailer;
+    private static Tailer tailer;
     private Broadcaster GLOBAL_BROADCASTER = null;
 
     //private Map<String, Broadcaster> brs = new HashMap<String, Broadcaster>();
@@ -33,7 +33,6 @@ public class LogViewerHandler implements AtmosphereHandler<HttpServletRequest, H
         final File logsDir = new File(FILE_TO_WATCH);
         if (logsDir.exists() && logsDir.isDirectory()) {
             File[] logs = logsDir.listFiles();
-            System.out.println("got files: " + logs.length);
             for (File f : logs) {
                 if (f.getName().endsWith(".log")) {
                     watchableLogs.add(f.getName());
@@ -71,9 +70,11 @@ public class LogViewerHandler implements AtmosphereHandler<HttpServletRequest, H
             // Very lame... req.getParameterValues("log")[0] doesn't work
             final String postPayload = req.getReader().readLine();
             if (postPayload != null && postPayload.startsWith("log=")) {
-                tailer = new LogFileTailer(new File(FILE_TO_WATCH + "//" + postPayload.split("=")[1]), 100, true);
-                tailer.start();
-                tailer.addLogFileTailerListener(this);
+//                tailer = new LogFileTailer(new File(FILE_TO_WATCH + "//" + postPayload.split("=")[1]), 100, true);
+//                tailer.start();
+//                tailer.addLogFileTailerListener(this);
+
+                Tailer.create(new File(FILE_TO_WATCH + "//" + postPayload.split("=")[1]), this, 500);
             }
             GLOBAL_BROADCASTER.broadcast(asJson("filename", postPayload.split("=")[1]));
             res.getWriter().flush();
@@ -100,20 +101,17 @@ public class LogViewerHandler implements AtmosphereHandler<HttpServletRequest, H
 
     @Override
     public void destroy() {
-
+        tailer.stop();
     }
 
-    @Override
-    public void newLogFileLine(final String line) {
-        synchronized (o) { // I guess this is a total over kill...
 
-            buffer.add(line);
-            if (buffer.size() == 10) {
-                GLOBAL_BROADCASTER.broadcast(asJsonArray("tail", buffer));
-                buffer.clear();
-            }
+    @Override
+    public void handle(String line) {
+        buffer.add(line);
+        if (buffer.size() == 10) {
+            GLOBAL_BROADCASTER.broadcast(asJsonArray("tail", buffer));
+            buffer.clear();
         }
-        //System.out.println(line);
     }
 
     protected String asJson(final String key, final String value) {
