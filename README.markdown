@@ -12,3 +12,18 @@ At the time of writing only one person replied and he told me to write the appli
 The application uses the [Atmosphere] (http://atmosphere.java.net/) framework for pushing the log data from the server to the client.
 I never worked with Atmoshphere before and I have found the documentation to be very poor, so I may not be using the framework in the perfect way.
 Nevertheless the application works in Tomcat 6.x and Jetty 6.1 (with some gotchas, see the "compatibility matrix").
+
+## Build
+
+To build the application, please install [Gradle](http://www.gradle.org/), the Groovy based build tool.
+Once installed, type :
+
+`gradle war` 
+
+to generate the deployable artifact.
+
+<table>
+    <tr>
+        <td>Foo</td>
+    </tr>
+</table>
