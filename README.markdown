@@ -16,14 +16,22 @@ Nevertheless the application works in Tomcat 6.x and Jetty 6.1 (with some gotcha
 ## Build
 
 To build the application, please install [Gradle](http://www.gradle.org/), the Groovy based build tool.
+
 Once installed, type :
 
 `gradle war` 
 
 to generate the deployable artifact.
 
-<table>
-    <tr>
-        <td>Foo</td>
-    </tr>
-</table>
+## What works and what doesn't (compatibility matrix)
+
+### Tomcat 6.0.X
+Works, but only with Firefox 3 and 4. Chrome doesn't seem to work. Other browsers not tested.
+
+### Jetty 6.1.x
+Works with Chrome and Firefox 4. Other browsers not tested.
+
+### Weblogic 10.3.x (11g)
+Doesn't even deploy. :(
+
+Enjoy. Fork, critique, comment, whatever.

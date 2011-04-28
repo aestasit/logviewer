@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class LogViewerHandler implements AtmosphereHandler<HttpServletRequest, HttpServletResponse>, LogFileTailerListener {
 
-    private final static String FILE_TO_WATCH = "/apps/bizzcore/dev/Tomcat/logs/";
+    private final static String FILE_TO_WATCH = "/var/log/";
     //private final static String FILE_TO_WATCH = "d://temp";
     private static LogFileTailer tailer;
     private Broadcaster GLOBAL_BROADCASTER = null;
@@ -31,18 +31,16 @@ public class LogViewerHandler implements AtmosphereHandler<HttpServletRequest, H
 
     public LogViewerHandler() {
         final File logsDir = new File(FILE_TO_WATCH);
-        System.out.println("--->" + logsDir.exists());
         if (logsDir.exists() && logsDir.isDirectory()) {
             File[] logs = logsDir.listFiles();
             System.out.println("got files: " + logs.length);
             for (File f : logs) {
-                System.out.println(" > " + f.getName());
                 if (f.getName().endsWith(".log")) {
                     watchableLogs.add(f.getName());
                 }
             }
         } else {
-            System.out.println("either logsDir doesn not exist or is not a folder");
+            System.out.println("either logsDir doesn't exist or is not a folder");
         }
 
     }
@@ -127,14 +125,4 @@ public class LogViewerHandler implements AtmosphereHandler<HttpServletRequest, H
         return ("{\"" + key + "\":" + JSONValue.toJSONString(list) + "}");
     }
 
-    public static void main(String[] args) {
-        LogViewerHandler l = new LogViewerHandler();
-        final List<String> s1 = new ArrayList<String>();
-        s1.add("hello2\"");
-        s1.add("hello3");
-        s1.add("hello4");
-        s1.add("hello5");
-        String x = l.asJsonArray("hello", s1);
-        //System.out.println(x);
-    }
 }
