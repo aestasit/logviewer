@@ -16,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * User: lfi
+ *
+ * @author luciano - luciano@aestasit.com
  */
 public class LogViewerHandler extends TailerListenerAdapter implements AtmosphereHandler<HttpServletRequest, HttpServletResponse> {
 
@@ -56,8 +57,6 @@ public class LogViewerHandler extends TailerListenerAdapter implements Atmospher
         if (req.getMethod().equalsIgnoreCase("GET")) {
 
             event.suspend();
-//            if (!brs.containsKey(event.getBroadcaster().getID()))
-//                brs.put(event.getBroadcaster().getID(), event.getBroadcaster());
             if (GLOBAL_BROADCASTER == null) GLOBAL_BROADCASTER = event.getBroadcaster();
 
             if (watchableLogs.size() != 0) {
@@ -70,10 +69,6 @@ public class LogViewerHandler extends TailerListenerAdapter implements Atmospher
             // Very lame... req.getParameterValues("log")[0] doesn't work
             final String postPayload = req.getReader().readLine();
             if (postPayload != null && postPayload.startsWith("log=")) {
-//                tailer = new LogFileTailer(new File(FILE_TO_WATCH + "//" + postPayload.split("=")[1]), 100, true);
-//                tailer.start();
-//                tailer.addLogFileTailerListener(this);
-
                 Tailer.create(new File(FILE_TO_WATCH + "//" + postPayload.split("=")[1]), this, 500);
             }
             GLOBAL_BROADCASTER.broadcast(asJson("filename", postPayload.split("=")[1]));
