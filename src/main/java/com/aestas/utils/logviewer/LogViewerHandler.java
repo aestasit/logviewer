@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author luciano - luciano@aestasit.com
  */
 public class LogViewerHandler extends TailerListenerAdapter implements AtmosphereHandler<HttpServletRequest, HttpServletResponse> {
@@ -69,7 +68,7 @@ public class LogViewerHandler extends TailerListenerAdapter implements Atmospher
             // Very lame... req.getParameterValues("log")[0] doesn't work
             final String postPayload = req.getReader().readLine();
             if (postPayload != null && postPayload.startsWith("log=")) {
-                Tailer.create(new File(FILE_TO_WATCH + "//" + postPayload.split("=")[1]), this, 500);
+                tailer = Tailer.create(new File(FILE_TO_WATCH + "//" + postPayload.split("=")[1]), this, 500);
             }
             GLOBAL_BROADCASTER.broadcast(asJson("filename", postPayload.split("=")[1]));
             res.getWriter().flush();
