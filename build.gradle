@@ -1,0 +1,22 @@
+apply plugin: 'java'
+apply plugin: 'jetty'
+apply plugin: 'idea'
+
+repositories {
+  mavenRepo urls: "https://oss.sonatype.org/content/repositories/releases/"
+  mavenCentral()
+}
+
+dependencies {
+
+  compile 'org.atmosphere:atmosphere-runtime:0.7.1'
+  compile 'org.atmosphere:atmosphere-compat-tomcat:0.7.1'
+  providedCompile 'javax.servlet:servlet-api:2.5'
+  compile 'com.googlecode.json-simple:json-simple:1.1'
+  compile 'org.slf4j:slf4j-api:1.6.1'
+  compile 'org.slf4j:slf4j-simple:1.6.1'
+
+}
+
+
+
