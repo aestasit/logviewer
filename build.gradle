@@ -3,7 +3,9 @@ apply plugin: 'jetty'
 apply plugin: 'idea'
 
 repositories {
-  mavenRepo urls: "https://oss.sonatype.org/content/repositories/releases/"
+  maven {
+  	url 'https://oss.sonatype.org/content/repositories/releases/'
+  	}
   mavenCentral()
 }
 
